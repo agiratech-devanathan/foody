@@ -4,8 +4,10 @@ import classes from './AvailableMeals.module.css';
 import MealItem from './MealItem/MealItem';
 
 
-const AvailableMeals = (props)=>{
+const AvailableMeals = (props) => {
   const [meals, setMeals] = useState([]);
+  //here implemeted the state fir loading state and set it default as true
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -24,30 +26,39 @@ const AvailableMeals = (props)=>{
       }
 
       setMeals(loadedMeals);
+      //Once data has fetched then loading state is false where setting
+      setIsLoading(false);
     };
 
     fetchMeals();
   }, []);
 
-      const mealsList=meals.map((meal) => (
-        <MealItem
-          key={meal.id}
-          id={meal.id}
-          name={meal.name}
-          description={meal.description}
-          price={meal.price}
-        />
-      ));
+  //if it's fetching may delay this loading statement triggered.
+  if (isLoading) {
+    return <section className={classes.MealsLoading}>
+      <p>Loading...</p>
+    </section>
+  }
 
-    return(<section className={classes.meals}>
-       <Card>
-       <ul>
-            {mealsList}
-        </ul>
-       </Card>
-        
+  const mealsList = meals.map((meal) => (
+    <MealItem
+      key={meal.id}
+      id={meal.id}
+      name={meal.name}
+      description={meal.description}
+      price={meal.price}
+    />
+  ));
 
-    </section>)
+  return (<section className={classes.meals}>
+    <Card>
+      <ul>
+        {mealsList}
+      </ul>
+    </Card>
+
+
+  </section>)
 }
 
 export default AvailableMeals;
